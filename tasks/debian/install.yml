@@ -1,0 +1,24 @@
+---
+- name: Install Prerequisites
+  apt:
+    name: "apt-transport-https"
+  become: true
+
+- name: Add debian repo key
+  apt_key:
+    url: "{{ grafana_apt_key }}"
+    state: present
+  become: true
+
+- name: Add debian repository
+  apt_repository:
+    repo: "{{ grafana_apt_repository }}"
+    update_cache: yes
+    state: present
+  become: true
+
+- name: Install Grafana Release
+  apt:
+    name: "grafana={{ grafana_version }}"
+  become: true
+  notify: grafana restart

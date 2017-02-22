@@ -1,0 +1,10 @@
+---
+- include: "{{ ansible_os_family|lower }}/install.yml"
+  tags:
+    - grafana
+    - grafana-install
+
+- include: configure.yml
+  tags:
+    - grafana
+    - grafana-configure

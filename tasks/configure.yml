@@ -1,0 +1,27 @@
+---
+- name: Setup grafana
+  template:
+    src: grafana.ini.j2
+    dest: /etc/grafana/grafana.ini
+  notify: grafana restart
+  become: true
+
+- name: Ensure that Grafana-Server is started
+  service:
+    name: grafana-server
+    state: started
+    enabled: yes
+  become: true
+
+- name: Install plugins
+  command: "grafana-cli plugins install {{item}}"
+  with_items: "{{ grafana_plugins_install }}"
+  notify: grafana restart
+  become: true
+
+- name: Copy dashboard json files
+  copy:
+    src: dashboards/
+    dest: "{{ grafana_dashboard_json_path }}"
+  when: grafana_dashboard_json_enabled
+  become: true
